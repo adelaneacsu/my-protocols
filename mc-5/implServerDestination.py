@@ -30,7 +30,7 @@ class MyDestinationProtocol(LineReceiver):
             #print 'SD: %s' % line
             data = line.strip().split(' ')
             if data[0] == 'PTH' and self.factory.source == self:
-                self.factory.dstpath = data[1] + str(self.transport.getPeer().port)
+                self.factory.dstpath = data[1]
                 logging.info('File %s opened for writing. Raw mode set.' % self.factory.dstpath)
                 for echoer in self.factory.echoFactory.echoers:
                     echoer.sendLine(line)

@@ -12,7 +12,7 @@ from implServerDestination import *
 SERVER_ARGUMENTS = [
     ['-sp', '--source-port', 'store', 1234, int, False, 'The port on which the server will listen for connections.'],
     ['-dp', '--dest-port', 'store', 1991, int, False, 'The port on which the server will listen for connections.'],
-    ['-lf', '--logfile', 'store', '/var/log/server.log', str, False, 'Path for logfile.']
+    ['-lf', '--logfile', 'store', '/tmp/log/server.log', str, False, 'Path for logfile.']
 ]
 
 if __name__ == '__main__':
