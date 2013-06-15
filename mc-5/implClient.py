@@ -13,9 +13,14 @@ class MyClientProtocol(LineReceiver):
         self.clients    = clients
     
     def connectionMade(self):
+        print 'Connected to source server.'
         logging.info('Connection made: %s' % self.transport.getPeer())
         message = 'FILE ' + self.sourceFile + ' ' + self.destFile
         self.sendLine(message)
+
+    def connectionLost(self, reason):
+        print 'Connection lost.'
+        logging.info('Connection lost: %s' % self.transport.getPeer())
 
         
     def lineReceived(self, line):
@@ -59,18 +64,3 @@ class MyClientFactory(ClientFactory):
     
     def buildProtocol(self, addr):
         return MyClientProtocol(self.parent, self.sourceFile, self.destFile, self.clients)
-
-    def startedConnecting(self, connector):
-        msg = 'Connected to source server.'
-        logging.info(msg)
-        print msg
-
-    def clientConnectionFailed(self, connector, reason):
-        msg = 'Connection to source server FAILED.'
-        logging.info(msg)
-        print msg
-
-    def clientConnectionLost(self, connector, reason):
-        msg = 'Connection to source server lost.'
-        logging.info(msg)
-        print msg
