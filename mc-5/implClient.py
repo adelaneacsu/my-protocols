@@ -19,6 +19,7 @@ class MyClientProtocol(LineReceiver):
 
         
     def lineReceived(self, line):
+        print line
         data = line.strip().split(' ')
         if data[0] == 'SZ':
             # file size

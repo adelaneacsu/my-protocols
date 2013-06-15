@@ -44,7 +44,7 @@ class MySourceProtocol(LineReceiver):
             logging.error('Connection ended unexpectedly. Reason: %s' % reason)
 
     def lineReceived(self, line):
-        #print 'SS: %s' % line
+        print 'SS: %s' % line
         data = line.strip().split(' ')
         if data[0] == 'FILE':
             self.filepath = data[1]

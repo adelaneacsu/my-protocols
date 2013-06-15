@@ -27,7 +27,7 @@ class MyDestinationProtocol(LineReceiver):
         if line[0] == '-':
             return self.rawDataReceived(line)
         else:
-            #print 'SD: %s' % line
+            print 'SD: %s' % line
             data = line.strip().split(' ')
             if data[0] == 'PTH' and self.factory.source == self:
                 self.factory.dstpath = data[1]

@@ -25,15 +25,7 @@ SERVERS = {
     "134.158.75.97": "FR3",
     "62.217.122.13": "GR1",
     "62.217.122.14": "GR2",
-    "127.0.0.1": "EU",
-
-    "193.226.5.102\n": "RO",
-    "134.158.75.91\n": "FR1",
-    "134.158.75.94\n": "FR2",
-    "134.158.75.97\n": "FR3",
-    "62.217.122.13\n": "GR1",
-    "62.217.122.14\n": "GR2",
-    "127.0.0.1\n": "EU"
+    "127.0.0.1": "EU"
 }
 
 class Callback(object):
@@ -59,7 +51,7 @@ if __name__ == '__main__':
     #js.write('var my_nodes = [ \'' + SERVERS[args.source_address] + '\',')
     with open(args.multicast) as mcFile:
         for line in mcFile:
-            client = line.split(':')
+            client = line.rstrip('\n').split(':')
             #js.write('\'' + SERVERS[client[0]] + '\',')
             if len(client) == 1:
                 client.append(args.dest_port)
