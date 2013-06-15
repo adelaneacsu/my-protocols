@@ -55,21 +55,21 @@ if __name__ == '__main__':
 
     cb = Callback()
     clients = []
-    js = open('../../../GUI/js/start.js', 'w')
-    js.write('var my_nodes = [ \'' + SERVERS[args.source_address] + '\',')
+    #js = open('../../../GUI/js/start.js', 'w')
+    #js.write('var my_nodes = [ \'' + SERVERS[args.source_address] + '\',')
     with open(args.multicast) as mcFile:
         for line in mcFile:
             client = line.split(':')
-            js.write('\'' + SERVERS[client[0]] + '\',')
+            #js.write('\'' + SERVERS[client[0]] + '\',')
             if len(client) == 1:
                 client.append(args.dest_port)
             else:
                 client[1] = int(client[1])
             clients.append(client)
-    js.seek(-1, 1)
-    js.write('];')
-    js.close()
-    #factory = MyClientFactory(cb, args.source_filepath, args.dest_filepath, clients)
-    #cb.port = reactor.connectTCP(args.source_address, args.source_port, factory)
+    #js.seek(-1, 1)
+    #js.write('];')
+    #js.close()
+    factory = MyClientFactory(cb, args.source_filepath, args.dest_filepath, clients)
+    cb.port = reactor.connectTCP(args.source_address, args.source_port, factory)
 
     reactor.run()
