@@ -28,6 +28,7 @@ class AnonymousFileReceiverProtocol(LineReceiver):
         log_message('Connection lost: %s' % self.transport.getPeer())
 
     def lineReceived(self, line):
+        print line
         line = line.strip()
         command = line.split(' ')
         if command[0] == 'SIZE':

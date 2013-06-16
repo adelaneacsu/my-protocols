@@ -22,6 +22,7 @@ class AnonymousFileSenderProtocol(LineReceiver):
         log_message('Connection lost: %s' % self.transport.getPeer())
 
     def lineReceived(self, line):
+        print line
         line = line.strip()
         if line == OK:
             sender = FileSender()

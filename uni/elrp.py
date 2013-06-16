@@ -28,6 +28,7 @@ class ExtendedLineReceiverProtocol(LineReceiver):
             error_message('Connection ended unexpectedly. Reason: %s' % reason)
 
     def lineReceived(self, line):
+        print line
         line = line.strip()
         data = line.split(' ')
         if len(data) == 0 or data == '':
