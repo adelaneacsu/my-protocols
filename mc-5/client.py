@@ -11,8 +11,8 @@ from implClient import *
 CLIENT_ARGUMENTS = [
     ['-sa', '--source-address', 'store', '127.0.0.1', str, False, 'The address of the source server. Default 127.0.0.1.'],
     ['-sf', '--source-filepath', 'store', None, str, True, 'The filepath from the source server.'],
-    ['-sp', '--source-port', 'store', 1234, int, False, 'The port of the source server. Default 1234.'],
-    ['-dp', '--dest-port', 'store', 8080, int, False, 'The port of the destination server. Default 1991.'],
+    ['-sp', '--source-port', 'store', 8000, int, False, 'The port of the source server. Default 8000.'],
+    ['-dp', '--dest-port', 'store', 8080, int, False, 'The port of the destination server. Default 8080.'],
     ['-df', '--dest-filepath', 'store', None, str, True, 'The filepath from the destination server.'],
     ['-mc', '--multicast', 'store', None, str, True, 'The filepath of the multicast file (contains addresses of destination servers).'],
     ['-lf', '--logfile', 'store', '/tmp/log/client.log', str, False, 'Path for logfile. Default /var/log/client.log.']
