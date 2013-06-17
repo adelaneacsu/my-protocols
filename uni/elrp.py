@@ -50,6 +50,8 @@ class ExtendedLineReceiverProtocol(LineReceiver):
             except IndexError:
                 self.sendLine(ERR_S)
                 return
+
+            print 'received: %s %d' % (self.destIP, self.destPort)
             
         elif command == 'RETR':
             # RETR filename

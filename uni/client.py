@@ -50,7 +50,7 @@ if __name__ == '__main__':
     if args.multicast is not None:
         with open(args.multicast) as mcFile:
             for line in mcFile:
-                client = line.split(':')
+                client = line.rstrip('\n').split(':')
                 if len(client) == 1:
                     client.append(args.dest_port)
                 else:
