@@ -14,7 +14,7 @@ class ClientProtocol(LineReceiver):
         self.nos        = nos
         self.streams    = streams
         self.serverType = serverType
-        self.destPort   = 8080
+        self.destPort   = 8000
         self.status     = 'IDLE'
     
     def connectionMade(self):  
