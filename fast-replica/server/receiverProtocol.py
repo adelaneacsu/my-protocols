@@ -26,6 +26,7 @@ class MyFileReceiverProtocol(LineReceiver):
         if line[0] == '-':
             return self.rawDataReceived(line)
         else:
+            print line
             data = line.strip().split(' ')
             if data[0] == 'PTH':
                 self.factory.dstpath = data[1]
