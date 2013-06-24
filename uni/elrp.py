@@ -28,7 +28,7 @@ class ExtendedLineReceiverProtocol(LineReceiver):
             error_message('Connection ended unexpectedly. Reason: %s' % reason)
 
     def lineReceived(self, line):
-        print line
+        print 'ELRP: %s' % line
         line = line.strip()
         data = line.split(' ')
         if len(data) == 0 or data == '':
@@ -50,8 +50,6 @@ class ExtendedLineReceiverProtocol(LineReceiver):
             except IndexError:
                 self.sendLine(ERR_S)
                 return
-
-            print 'received: %s %d' % (self.destIP, self.destPort)
             
         elif command == 'RETR':
             # RETR filename

@@ -11,7 +11,7 @@ class AnonymousFileReceiverProtocol(LineReceiver):
     def __init__(self, parent, filepath):
         self.parent = parent
         self.filepath = filepath
-        log_message('New instance of AnonymousFileSenderProtocol created')
+        log_message('New instance of AnonymousFileReceiverProtocol created')
 
     def connectionMade(self):
         log_message('Connection made: %s' % self.transport.getPeer())
@@ -28,7 +28,7 @@ class AnonymousFileReceiverProtocol(LineReceiver):
         log_message('Connection lost: %s' % self.transport.getPeer())
 
     def lineReceived(self, line):
-        print line
+        print 'file receiver:%s' % line
         line = line.strip()
         command = line.split(' ')
         if command[0] == 'SIZE':
