@@ -9,4 +9,5 @@ class AnonymousFileReceiverFactory(ServerFactory):
         self.filepath = filepath
 
     def buildProtocol(self, addr):
+    	print 'buile receiver protocol'
         return AnonymousFileReceiverProtocol(self.parent, self.filepath)

@@ -8,4 +8,5 @@ class AnonymousFileSenderFactory(ServerFactory):
         self.filepath = filepath
 
     def buildProtocol(self, addr):
+    	print 'build sender protocol'
         return AnonymousFileSenderProtocol(self.filepath)
