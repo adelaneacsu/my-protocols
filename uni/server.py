@@ -14,6 +14,11 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     startLogger(args.logfile)
-    endpoint = TCP4ServerEndpoint(reactor, args.port)
-    endpoint.listen(ExtendedLineReceiverFactory(args.port))
+
+    endpointD = TCP4ServerEndpoint(reactor, args.dest_port)
+    endpointD.listen(AnonymousFileReceiverFactory(args.dest_port))
+
+    endpointS = TCP4ServerEndpoint(reactor, args.source_port)
+    endpointS.listen(ExtendedLineReceiverFactory(args.source_port))
+
     reactor.run()

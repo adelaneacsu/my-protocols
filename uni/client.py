@@ -5,7 +5,7 @@ from twisted.internet.endpoints import TCP4ClientEndpoint
 from twisted.internet import reactor, defer
 
 from common import *
-from ecp import *
+from cp import *
 
 class Callback(object):
 

@@ -7,22 +7,19 @@ from common import *
 
 class AnonymousFileReceiverFactory(ServerFactory):
     
-    def __init__(self, parent, filepath):
-        print 'another ServerFactory'
-        self.parent = parent
-        self.filepath = filepath
+    def __init__(self, port):
+        self.port = port
 
     def buildProtocol(self, addr):
-        print 'buile receiver protocol'
-        return AnonymousFileReceiverProtocol(self.parent, self.filepath)
+        addr.port = self.port
+        return AnonymousFileReceiverProtocol()
 
 
 class AnonymousFileReceiverProtocol(LineReceiver):
 
-    def __init__(self, parent, filepath):
+    def __init__(self):
         print 'New instance of AnonymousFileReceiverProtocol created'
-        self.parent = parent
-        self.filepath = filepath
+        self.filepath = '/tmp/file'
         log_message('New instance of AnonymousFileReceiverProtocol created')
 
     def connectionMade(self):
@@ -37,7 +34,7 @@ class AnonymousFileReceiverProtocol(LineReceiver):
         else:
             log_message('An error ocurred during transfer.')
         # Notify parent that connection was lost so that it stops the server.
-        self.parent._lostConnection()
+        print 'DONE !!!'
         log_message('Connection lost: %s' % self.transport.getPeer())
 
     def lineReceived(self, line):

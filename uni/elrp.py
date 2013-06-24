@@ -86,15 +86,5 @@ class ExtendedLineReceiverProtocol(LineReceiver):
             except IndexError:
                 self.sendLine(ERR_S)
                 return
-            #endpoint = TCP4ServerEndpoint(reactor, self.destPort)
-            #endpoint.listen(AnonymousFileReceiverFactory(self, self.filename)).addCallback(hello2).addErrback(goodbye2)
-            port = reactor.listenTCP(self.destPort, AnonymousFileReceiverFactory(self, self.filename))
-            self.port = port
-            print 'DONE stor'
-
+            # tell receiver protocol name of file
         self.sendLine(OK)
-
-    def _lostConnection(self):
-        # Called from destination server, after the file was transfered.
-        self.port.stopListening()
-        self.sendLine('DONE')
