@@ -26,6 +26,7 @@ class ServerLineReceiverProtocol(LineReceiver):
             logging.error('Connection ended unexpectedly. Reason: %s' % reason)
 
     def lineReceived(self, line):
+        print line
         data = line.strip().split(' ')
         if len(data) == 0 or data == '':
             self.sendLine('ERR')
