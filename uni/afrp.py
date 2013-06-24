@@ -1,10 +1,21 @@
 from twisted.protocols.ftp import FileConsumer, FTPClient
 from twisted.protocols.basic import LineReceiver
-from zope.interface import implements
-from twisted.internet import interfaces
+from twisted.internet.protocol import ServerFactory
 
 
 from common import *
+
+class AnonymousFileReceiverFactory(ServerFactory):
+    
+    def __init__(self, parent, filepath):
+        print 'another ServerFactory'
+        self.parent = parent
+        self.filepath = filepath
+
+    def buildProtocol(self, addr):
+        print 'buile receiver protocol'
+        return AnonymousFileReceiverProtocol(self.parent, self.filepath)
+
 
 class AnonymousFileReceiverProtocol(LineReceiver):
 

@@ -2,28 +2,23 @@ import os
 from multiprocessing.connection import Listener
 
 from twisted.protocols.basic import LineReceiver
+from twisted.internet.protocol import ServerFactory
 from twisted.internet.endpoints import TCP4ClientEndpoint, TCP4ServerEndpoint
 from twisted.internet import reactor
 
 from common import *
-from afsf import *
-from afrf import *
+from afsp import *
+from afrp import *
 
 
-def hello1(protocol):
-    print 'HELLO'
+class ExtendedLineReceiverFactory(ServerFactory):
+    
+    def __init__(self, port):
+        self.port = port
 
-def goodbye1(protocol):
-    print 'GOODBYE'
-
-
-
-def hello2(protocol):
-    print 'fdsgfsdgfdgd'
-
-def goodbye2(protocol):
-    print 'altceva'
-
+    def buildProtocol(self, addr):
+        addr.port = self.port
+        return ExtendedLineReceiverProtocol()
 
 class ExtendedLineReceiverProtocol(LineReceiver):
 
@@ -80,7 +75,7 @@ class ExtendedLineReceiverProtocol(LineReceiver):
                 return
             # if everything is OK, start connection from source server
             endpoint = TCP4ClientEndpoint(reactor, self.destIP, self.destPort)
-            endpoint.connect(AnonymousFileSenderFactory(self.filename)).addCallback(hello1).addErrback(goodbye1)
+            endpoint.connect(AnonymousFileSenderFactory(self.filename))
             print 'DONE retr'
 
         elif command == 'STOR':
@@ -91,15 +86,15 @@ class ExtendedLineReceiverProtocol(LineReceiver):
             except IndexError:
                 self.sendLine(ERR_S)
                 return
-            endpoint = TCP4ServerEndpoint(reactor, self.destPort)
-            endpoint.listen(AnonymousFileReceiverFactory(self, self.filename)).addCallback(hello2).addErrback(goodbye2)
-            #port = reactor.listenTCP(self.destPort, AnonymousFileReceiverFactory(self, self.filename))
-            #self.port = port
+            #endpoint = TCP4ServerEndpoint(reactor, self.destPort)
+            #endpoint.listen(AnonymousFileReceiverFactory(self, self.filename)).addCallback(hello2).addErrback(goodbye2)
+            port = reactor.listenTCP(self.destPort, AnonymousFileReceiverFactory(self, self.filename))
+            self.port = port
             print 'DONE stor'
 
         self.sendLine(OK)
 
     def _lostConnection(self):
         # Called from destination server, after the file was transfered.
-        #self.port.stopListening()
+        self.port.stopListening()
         self.sendLine('DONE')

@@ -16,7 +16,6 @@ class ServerLineReceiverProtocol(LineReceiver):
         self.connDone = 0
         self.fileDone = 0
         self.client = self.transport.getPeer().host
-        self.sendLine('K')
         logging.info('New connection from: %s on port %s' % (self.client,  self.transport.getPeer().port))
 
     def connectionLost(self, reason):

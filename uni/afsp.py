@@ -3,8 +3,20 @@ from multiprocessing.connection import Client
 
 from twisted.protocols.basic import FileSender
 from twisted.protocols.basic import LineReceiver
+from twisted.internet.protocol import ServerFactory
 
 from common import *
+
+class AnonymousFileSenderFactory(ServerFactory):
+    
+    def __init__(self, filepath):
+        print 'FACTORY !!!'
+        self.filepath = filepath
+        print filepath
+
+    def buildProtocol(self, addr):
+        print 'build sender protocol'
+        return AnonymousFileSenderProtocol(self.filepath)
 
 class AnonymousFileSenderProtocol(LineReceiver):
 

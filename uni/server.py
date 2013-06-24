@@ -5,7 +5,7 @@ from twisted.internet.endpoints import TCP4ServerEndpoint
 from twisted.internet import reactor
 
 from common import *
-from elrf import *
+from elrp import *
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
