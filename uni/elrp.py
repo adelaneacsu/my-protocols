@@ -11,10 +11,14 @@ from afrf import *
 
 
 def hello(protocol):
+    print '========================================================'
+    print '%s %s' % (protocol[0], protocol[1])
     print 'HELLO'
 
 def goodbye(protocol):
-    print 'goodbye'
+    print '========================================================'
+    print '%s %s' % (protocol[0], protocol[1])
+    print 'GOODBYE'
 
 
 class ExtendedLineReceiverProtocol(LineReceiver):
@@ -83,15 +87,15 @@ class ExtendedLineReceiverProtocol(LineReceiver):
             except IndexError:
                 self.sendLine(ERR_S)
                 return
-            #endpoint = TCP4ServerEndpoint(reactor, self.destPort)
-            #endpoint.listen(AnonymousFileReceiverFactory(self, self.filename))
-            port = reactor.listenTCP(self.destPort, AnonymousFileReceiverFactory(self, self.filename))
-            self.port = port
+            endpoint = TCP4ServerEndpoint(reactor, self.destPort)
+            endpoint.listen(AnonymousFileReceiverFactory(self, self.filename)).addCallback(hello).addErrback(goodbye)
+            #port = reactor.listenTCP(self.destPort, AnonymousFileReceiverFactory(self, self.filename))
+            #self.port = port
             print 'DONE stor'
 
         self.sendLine(OK)
 
     def _lostConnection(self):
         # Called from destination server, after the file was transfered.
-        self.port.stopListening()
+        #self.port.stopListening()
         self.sendLine('DONE')
