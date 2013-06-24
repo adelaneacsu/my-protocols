@@ -10,6 +10,13 @@ from afsf import *
 from afrf import *
 
 
+def hello(protocol):
+    print 'HELLO'
+
+def goodbye(protocol):
+    print 'goodbye'
+
+
 class ExtendedLineReceiverProtocol(LineReceiver):
 
     def __init__(self):
@@ -64,9 +71,9 @@ class ExtendedLineReceiverProtocol(LineReceiver):
                 self.sendLine(ERR_S)
                 return
             # if everything is OK, start connection from source server
-            print 'ip %s port %d' % (self.destIP, self.destPort)
             endpoint = TCP4ClientEndpoint(reactor, self.destIP, self.destPort)
-            endpoint.connect(AnonymousFileSenderFactory(self.filename))
+            endpoint.connect(AnonymousFileSenderFactory(self.filename)).addCallback(hello).addErrback(goodbye)
+            print 'DONE retr'
 
         elif command == 'STOR':
             # STOR filename
@@ -80,6 +87,7 @@ class ExtendedLineReceiverProtocol(LineReceiver):
             #endpoint.listen(AnonymousFileReceiverFactory(self, self.filename))
             port = reactor.listenTCP(self.destPort, AnonymousFileReceiverFactory(self, self.filename))
             self.port = port
+            print 'DONE stor'
 
         self.sendLine(OK)
 

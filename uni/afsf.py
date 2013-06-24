@@ -6,6 +6,7 @@ class AnonymousFileSenderFactory(ServerFactory):
     def __init__(self, filepath):
     	print 'FACTORY !!!'
         self.filepath = filepath
+        print filepath
 
     def buildProtocol(self, addr):
     	print 'build sender protocol'
