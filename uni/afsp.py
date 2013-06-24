@@ -9,10 +9,12 @@ from common import *
 class AnonymousFileSenderProtocol(LineReceiver):
 
     def __init__(self, filepath):
+        print 'New instance of AnonymousFileSenderProtocol created'
         self.filepath = filepath
         log_message('New instance of AnonymousFileSenderProtocol created')
 
     def connectionMade(self):
+        print 'Connection made to sender: %s' % self.transport.getPeer()
         self.fileObj = open(self.filepath, 'rb')
         size = os.stat(self.filepath).st_size
         self.sendLine('SIZE ' + str(size))

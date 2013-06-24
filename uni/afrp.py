@@ -9,11 +9,13 @@ from common import *
 class AnonymousFileReceiverProtocol(LineReceiver):
 
     def __init__(self, parent, filepath):
+        print 'New instance of AnonymousFileReceiverProtocol created'
         self.parent = parent
         self.filepath = filepath
         log_message('New instance of AnonymousFileReceiverProtocol created')
 
     def connectionMade(self):
+        print 'Connection made on receiver: %s' % self.transport.getPeer()
         log_message('Connection made: %s' % self.transport.getPeer())
 
     def connectionLost(self, reason):

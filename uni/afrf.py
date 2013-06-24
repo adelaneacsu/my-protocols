@@ -4,6 +4,7 @@ from afrp import *
 class AnonymousFileReceiverFactory(ServerFactory):
     
     def __init__(self, parent, filepath):
+    	print 'another ServerFactory'
         self.parent = parent
         self.filepath = filepath
 
