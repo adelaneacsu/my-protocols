@@ -6,8 +6,8 @@ CLIENT_ARGUMENTS = [
     ['-da', '--dest-address', 'store', '127.0.0.1', str, False, 'The address of the destination server.'],
     ['-sf', '--source-filepath', 'store', None, str, True, 'The filepath from the source server.'],
     ['-df', '--dest-filepath', 'store', None, str, True, 'The filepath from the destination server.'],
-    ['-sp', '--source-port', 'store', 8080, int, False, 'The port of the source server.'],
-    ['-dp', '--dest-port', 'store', 8080, int, False, 'The port of the destination server.'],
+    ['-sp', '--source-port', 'store', 8000, int, False, 'The port of the source server.'],
+    ['-dp', '--dest-port', 'store', 8000, int, False, 'The port of the destination server.'],
     ['-mc', '--multicast', 'store', None, str, False, 'The filepath of the multicast file (contains addresses of destination servers).'],
     ['-ps', '--parallel-streams', 'store', 1, int, False, 'Option for using multiple connections during transfer'],
     ['-ns', '--no-statistics', 'store', False, bool, False, 'The client doesn\'t request any statistics for the transfer.'],
@@ -15,7 +15,7 @@ CLIENT_ARGUMENTS = [
 ]
 
 SERVER_ARGUMENTS = [
-    ['-p', '--port', 'store', 8080, int, False, 'The port on which the server will listen for connections.'],
+    ['-p', '--port', 'store', 8000, int, False, 'The port on which the server will listen for connections.'],
     ['-lf', '--logfile', 'store', '/tmp/log/server.log', str, False, 'Path for logfile.']
 ]
 
