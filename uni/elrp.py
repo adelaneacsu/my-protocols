@@ -10,15 +10,19 @@ from afsf import *
 from afrf import *
 
 
-def hello(protocol):
-    print '========================================================'
-    print '%s %s' % (protocol[0], protocol[1])
+def hello1(protocol):
     print 'HELLO'
 
-def goodbye(protocol):
-    print '========================================================'
-    print '%s %s' % (protocol[0], protocol[1])
+def goodbye1(protocol):
     print 'GOODBYE'
+
+
+
+def hello2(protocol):
+    print 'fdsgfsdgfdgd'
+
+def goodbye2(protocol):
+    print 'altceva'
 
 
 class ExtendedLineReceiverProtocol(LineReceiver):
@@ -76,7 +80,7 @@ class ExtendedLineReceiverProtocol(LineReceiver):
                 return
             # if everything is OK, start connection from source server
             endpoint = TCP4ClientEndpoint(reactor, self.destIP, self.destPort)
-            endpoint.connect(AnonymousFileSenderFactory(self.filename)).addCallback(hello).addErrback(goodbye)
+            endpoint.connect(AnonymousFileSenderFactory(self.filename)).addCallback(hello1).addErrback(goodbye1)
             print 'DONE retr'
 
         elif command == 'STOR':
@@ -88,7 +92,7 @@ class ExtendedLineReceiverProtocol(LineReceiver):
                 self.sendLine(ERR_S)
                 return
             endpoint = TCP4ServerEndpoint(reactor, self.destPort)
-            endpoint.listen(AnonymousFileReceiverFactory(self, self.filename)).addCallback(hello).addErrback(goodbye)
+            endpoint.listen(AnonymousFileReceiverFactory(self, self.filename)).addCallback(hello2).addErrback(goodbye2)
             #port = reactor.listenTCP(self.destPort, AnonymousFileReceiverFactory(self, self.filename))
             #self.port = port
             print 'DONE stor'
