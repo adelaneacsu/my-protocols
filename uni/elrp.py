@@ -64,6 +64,7 @@ class ExtendedLineReceiverProtocol(LineReceiver):
                 self.sendLine(ERR_S)
                 return
             # if everything is OK, start connection from source server
+            print 'ip %s port %d' % (self.destIP, self.destPort)
             endpoint = TCP4ClientEndpoint(reactor, self.destIP, self.destPort)
             endpoint.connect(AnonymousFileSenderFactory(self.filename))
 
