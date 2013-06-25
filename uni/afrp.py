@@ -34,7 +34,6 @@ class AnonymousFileReceiverProtocol(LineReceiver):
         else:
             log_message('An error ocurred during transfer.')
         # Notify parent that connection was lost so that it stops the server.
-        print 'DONE !!!'
         log_message('Connection lost: %s' % self.transport.getPeer())
 
     def lineReceived(self, line):

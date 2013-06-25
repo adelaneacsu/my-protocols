@@ -47,6 +47,7 @@ class AnonymousFileSenderProtocol(LineReceiver):
     def success(self, lastByte):
         self.fileObj.close()
         self.transport.loseConnection()
+        print 'DONE'
         log_message('Finished transfer.')
 
     def error(self, response):
