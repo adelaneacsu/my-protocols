@@ -94,4 +94,4 @@ class ExtendedLineReceiverProtocol(LineReceiver):
     def _finishedTransfer(self):
         print 'FINISHED...'
         self.senderFactory = None
-        self.transport.sendLine('DONE')
+        self.sendLine('DONE')
