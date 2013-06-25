@@ -74,8 +74,10 @@ class ExtendedLineReceiverProtocol(LineReceiver):
                 self.sendLine(ERR_S)
                 return
             # if everything is OK, start connection from source server
+            if not hasattr(self, 'senderFactory'):
+                self.senderFactory = AnonymousFileSenderFactory(self)
             endpoint = TCP4ClientEndpoint(reactor, self.destIP, self.destPort)
-            endpoint.connect(AnonymousFileSenderFactory(self.filename))
+            endpoint.connect(self.senderFactory)
             print 'DONE retr'
 
         elif command == 'STOR':
@@ -88,3 +90,8 @@ class ExtendedLineReceiverProtocol(LineReceiver):
                 return
             # tell receiver protocol name of file
         self.sendLine(OK)
+
+    def _finishedTransfer(self):
+        print 'FINISHED...'
+        self.senderFactory = None
+        self.transport.sendLine('DONE')

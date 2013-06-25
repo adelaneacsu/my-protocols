@@ -10,29 +10,28 @@ from common import *
 class AnonymousFileSenderFactory(ServerFactory):
     
     def __init__(self, filepath):
-        print 'FACTORY !!!'
         self.filepath = filepath
-        print filepath
+        self.connections = 0
 
     def buildProtocol(self, addr):
-        print 'build sender protocol'
-        return AnonymousFileSenderProtocol(self.filepath)
+        return AnonymousFileSenderProtocol(self)
 
 class AnonymousFileSenderProtocol(LineReceiver):
 
-    def __init__(self, filepath):
+    def __init__(self, factory):
         print 'New instance of AnonymousFileSenderProtocol created'
-        self.filepath = filepath
+        self.filepath = factory.filepath
         log_message('New instance of AnonymousFileSenderProtocol created')
 
     def connectionMade(self):
-        print 'Connection made to sender: %s' % self.transport.getPeer()
+        self.factory.connections += 1
         self.fileObj = open(self.filepath, 'rb')
         size = os.stat(self.filepath).st_size
         self.sendLine('SIZE ' + str(size))
         log_message('Connection made: %s' % self.transport.getPeer())    
 
     def connectionLost(self, reason):
+        self.factory.connections -= 1
         log_message('Connection lost: %s' % self.transport.getPeer())
 
     def lineReceived(self, line):
@@ -47,7 +46,6 @@ class AnonymousFileSenderProtocol(LineReceiver):
     def success(self, lastByte):
         self.fileObj.close()
         self.transport.loseConnection()
-        print 'DONE'
         log_message('Finished transfer.')
 
     def error(self, response):
