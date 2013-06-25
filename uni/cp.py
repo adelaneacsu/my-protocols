@@ -44,7 +44,7 @@ class ClientProtocol(LineReceiver):
         self.nos        = nos
         self.streams    = streams
         self.serverType = serverType
-        self.destPort   = 8080
+        self.destPort   = 22020
         self.status     = 'IDLE'
     
     def connectionMade(self):  
@@ -53,7 +53,6 @@ class ClientProtocol(LineReceiver):
 
         
     def lineReceived(self, line):
-        print 'client %s' % line
         line = line.strip()
         if line == OK:
             for case in switch(self.status):
