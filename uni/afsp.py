@@ -11,7 +11,7 @@ class AnonymousFileSenderFactory(ServerFactory):
     
     def __init__(self, parent):
         self.parent = parent
-        self.filepath = parent.filepath
+        self.filepath = parent.filename
         self.connections = 0
 
     def buildProtocol(self, addr):
