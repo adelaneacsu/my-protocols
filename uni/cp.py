@@ -53,6 +53,7 @@ class ClientProtocol(LineReceiver):
 
         
     def lineReceived(self, line):
+        print line
         line = line.strip()
         if line == OK:
             for case in switch(self.status):
