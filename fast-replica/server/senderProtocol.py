@@ -31,7 +31,6 @@ class MyFileSenderProtocol(LineReceiver):
         self.sendLine('PTH ' + self.parent.dstpath)
         self.sendLine('PKs ' + str(self.parent.nrClients) + ' ' + str(self.parent.packetSize))
         self.sendLine('IDx ' + str(self.index))
-        self.parent.connDone += 1
         for currIndex in range(self.parent.nrClients - 2):
             idx = (currIndex + self.index + 1) % self.parent.nrClients
             line = 'N ' + self.parent.clients[idx][0] + ' ' + str(self.parent.clients[idx][1])
