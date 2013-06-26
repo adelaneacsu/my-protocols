@@ -14,12 +14,16 @@ class MyFileReceiverProtocol(LineReceiver):
         self.MAX_LENGTH = 524288010
 
     def connectionMade(self):
+        print 'conn made'
         if self.factory.source is None:
+            print 'source is %s' % self.transport.getPeer()
             self.factory.source = self
         logging.info('Connection made: %s' % self.transport.getPeer())
 
     def connectionLost(self, reason):
+        print 'conn lost'
         if self.factory.source == self:
+            print 'source is STILL %s' % self.transport.getPeer()
             self.factory.source = None
         logging.info('Connection lost: %s' % self.transport.getPeer())
 
