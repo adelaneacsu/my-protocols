@@ -35,11 +35,12 @@ if __name__ == '__main__':
     logging.basicConfig(filename=args.logfile, filemode='w', format='%(levelname)s:[%(asctime)s] %(message)s', datefmt='%d/%m/%Y %I:%M:%S %p', level=logging.DEBUG)
     logging.info('Client started.')
 
+
     cb = Callback()
     clients = []
     with open(args.multicast) as mcFile:
         for line in mcFile:
-            client = line.split(':')
+            client = line.rstrip('\n').split(':')
             if len(client) == 1:
                 client.append(args.dest_port)
             else:
