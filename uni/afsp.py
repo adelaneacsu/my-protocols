@@ -34,6 +34,8 @@ class AnonymousFileSenderProtocol(LineReceiver):
 
     def connectionLost(self, reason):
         self.factory.connections -= 1
+        if self.factory.connections == 0:
+            self.factory.parent._finishedTransfer()
         log_message('Connection lost: %s' % self.transport.getPeer())
 
     def lineReceived(self, line):
@@ -48,7 +50,6 @@ class AnonymousFileSenderProtocol(LineReceiver):
     def success(self, lastByte):
         self.fileObj.close()
         self.transport.loseConnection()
-        self.factory.parent._finishedTransfer()
         log_message('Finished transfer.')
 
     def error(self, response):

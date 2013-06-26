@@ -10,8 +10,8 @@ from receiverFactory import *
 
 
 SERVER_ARGUMENTS = [
-    ['-sp', '--source-port', 'store', 8080, int, False, 'The port on which the server will listen for connections.'],
-    ['-dp', '--dest-port', 'store', 8000, int, False, 'The port on which the server will listen for connections.'],
+    ['-sp', '--source-port', 'store', 22020, int, False, 'The port on which the server will listen for connections.'],
+    ['-dp', '--dest-port', 'store', 22000, int, False, 'The port on which the server will listen for connections.'],
     ['-lf', '--logfile', 'store', '/tmp/log/server.log', str, False, 'Path for logfile.']
 ]
 
