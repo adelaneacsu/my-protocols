@@ -13,9 +13,9 @@ class ServerLineReceiverProtocol(LineReceiver):
         logging.info('Server started.')
 
     def connectionMade(self):
-        self.connDone = 0
         self.fileDone = 0
         self.client = self.transport.getPeer().host
+        self.children = []
         logging.info('New connection from: %s on port %s' % (self.client,  self.transport.getPeer().port))
 
     def connectionLost(self, reason):
@@ -71,9 +71,14 @@ class ServerLineReceiverProtocol(LineReceiver):
     def _incFileDone(self, peer):
         self.fileDone += 1
         logging.info('Transfer to %s completed.' % peer)
-        if self.fileDone == self.connDone:
+        if self.fileDone == self.nrClients:
             finishMsg = 'All destinations received the file. Transfer fully completed.'
             logging.info(finishMsg)
             print finishMsg
             self.sendLine('DN')
 
+    def _connDone(self, child):
+        self.children.append(child)
+        if len(self.children) == self.nrClients:
+            for child in self.children:
+                child.sendConfiguration()

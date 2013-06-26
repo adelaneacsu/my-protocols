@@ -47,7 +47,6 @@ class MyFileReceiverProtocol(LineReceiver):
             elif data[0] == 'IDx':
                 self.factory.index = int(data[1])
                 self.factory.originalReceived = False
-                self.factory.allConnected = False
                 self.factory.dstpath = self.factory.dstpath + data[1]
 
             elif data[0] == 'N':
@@ -55,8 +54,6 @@ class MyFileReceiverProtocol(LineReceiver):
                 port = int(data[2])
                 endpoint = TCP4ClientEndpoint(reactor, IP, port)
                 endpoint.connect(self.factory.echoFactory).addCallback(self._addNeighbour)
-                if len(data) == 4 and data[3] == 'DN':
-                    self.sendLine('GO')
 
             elif data[0] == 'NON':
                 self.sendLine('GO')                
@@ -71,7 +68,7 @@ class MyFileReceiverProtocol(LineReceiver):
             self.factory.originalReceived = True
         # forward original package
         
-        if self.factory.isFirst and self.factory.allConnected and (self.factory.originalReceived):
+        if self.factory.isFirst and self.factory.originalReceived:
             for echoer in self.factory.echoFactory.echoers:
                 echoer.sendLine('-' + str(self.factory.index) + self.factory.buffer[self.factory.index])
             self.factory.isFirst = False
@@ -94,4 +91,4 @@ class MyFileReceiverProtocol(LineReceiver):
     def _addNeighbour(self, deff):
         self.factory.nrOutConn += 1
         if (self.factory.nrOutConn == self.factory.nrPackages - 2):
-            self.factory.allConnected = True
+            self.sendLine('GO')
