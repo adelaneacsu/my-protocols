@@ -81,4 +81,4 @@ class ServerLineReceiverProtocol(LineReceiver):
         self.children.append(child)
         if len(self.children) == self.nrClients:
             for child in self.children:
-                child.sendConfiguration()
+                child._sendConfiguration()
