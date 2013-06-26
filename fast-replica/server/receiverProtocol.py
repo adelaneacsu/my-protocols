@@ -11,6 +11,7 @@ class MyFileReceiverProtocol(LineReceiver):
 
     def __init__(self, factory):
         self.factory = factory
+        self.MAX_LENGTH = 524288010
 
     def connectionMade(self):
         if self.factory.source is None:
@@ -57,7 +58,6 @@ class MyFileReceiverProtocol(LineReceiver):
                 self.sendLine('GO')                
 
     def rawDataReceived(self, rawData):
-        print 'RAW %s' % rawData
         # write to buffer
         index = int(rawData[1])
         self.factory.buffer[index] = rawData[2:]
