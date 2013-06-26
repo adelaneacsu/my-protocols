@@ -57,6 +57,7 @@ class MyFileReceiverProtocol(LineReceiver):
                 self.sendLine('GO')                
 
     def rawDataReceived(self, rawData):
+        print 'RAW %s' % rawData
         # write to buffer
         index = int(rawData[1])
         self.factory.buffer[index] = rawData[2:]
