@@ -31,6 +31,7 @@ class MyFileSenderProtocol(LineReceiver):
         logging.info('Connection lost: %s' % self.transport.getPeer())
 
     def lineReceived(self, line):
+        print 'sender %s' % line
         if line == 'GO':
             self.sendLine(self.parent.buffer[self.index])
             self.sendLine(self.parent.buffer[(self.index + 1) % self.parent.nrClients])

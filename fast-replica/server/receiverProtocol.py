@@ -54,7 +54,6 @@ class MyFileReceiverProtocol(LineReceiver):
                     self.sendLine('GO')
 
             elif data[0] == 'NON':
-                print 'trully non ...'
                 self.sendLine('GO')                
 
     def rawDataReceived(self, rawData):
