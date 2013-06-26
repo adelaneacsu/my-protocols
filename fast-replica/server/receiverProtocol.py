@@ -61,6 +61,7 @@ class MyFileReceiverProtocol(LineReceiver):
         # write to buffer
         index = int(rawData[1])
         self.factory.buffer[index] = rawData[2:]
+        print 'RAW nr. %d size %d' % (index, len(self.factory.buffer[index]))
         self.factory.toReceive -= 1
         if index == self.factory.index:
             self.factory.originalReceived = True
@@ -82,6 +83,9 @@ class MyFileReceiverProtocol(LineReceiver):
             for echoer in self.factory.echoFactory.echoers:
                 echoer.transport.loseConnection()
         logging.info('Received %d bytes.' % len(rawData))
+
+    def lineLengthExceeded(self, line):
+        print 'LINE EXCEEDED'
 
     def _addNeighbour(self, deff):
         self.factory.nrOutConn += 1
