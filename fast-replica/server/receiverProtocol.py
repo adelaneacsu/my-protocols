@@ -53,6 +53,9 @@ class MyFileReceiverProtocol(LineReceiver):
                 if len(data) == 4 and data[3] == 'DN':
                     self.sendLine('GO')
 
+            elif data[0] == 'NON':
+                self.sendLine('GO')                
+
     def rawDataReceived(self, rawData):
         # write to buffer
         index = int(rawData[1])

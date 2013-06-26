@@ -23,6 +23,8 @@ class MyFileSenderProtocol(LineReceiver):
             if currIndex == (self.parent.nrClients - 3):
                 line += ' DN'
             self.sendLine(line)
+        if self.parent.nrClients == 2:
+            self.sendLine('NON')
         logging.info('Connection made: %s' % self.transport.getPeer())
 
     def connectionLost(self, reason):
