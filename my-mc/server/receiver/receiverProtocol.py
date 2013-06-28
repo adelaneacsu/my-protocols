@@ -46,12 +46,6 @@ class MyReceiverProtocol(LineReceiver):
                 except IndexError:
                     self.sendLine('ERRR')
                     return
-                # start statistics
-                self.factory.startTime  = time.time()
-                self.factory.minTime    = 1000000
-                self.factory.maxTime    = 0
-                self.factory.avgTime    = 0
-                self.factory.nrPacksRec = 0
 
             elif data[0] == 'SIBL' or data[0] == 'CHLD':
                 # SIBL/CHLD IP port
@@ -73,6 +67,13 @@ class MyReceiverProtocol(LineReceiver):
                 except IndexError:
                     self.sendLine('ERRR')
                     return
+                # start statistics
+                self.factory.startTime  = time.time()
+                self.factory.minTime    = 1000000
+                self.factory.maxTime    = 0
+                self.factory.avgTime    = 0
+                self.factory.nrPacksRec = 0
+                # forward configurations
                 if self.factory.source == self:
                     for echoer in self.factory.echoFactory.echoers:
                         echoer.sendLine(line)
@@ -124,14 +125,15 @@ class MyReceiverProtocol(LineReceiver):
         print 'PACK %d' % currIndex
         # statistics
         self.factory.nrPacksRec += 1
-        time = time.time()
-        delta = time - self.factory.startTime
+        currTime = time.time()
+        print 'Time is %.3f' % currTime
+        delta = currTime - self.factory.startTime
         if delta < self.factory.factory.minTime:
             self.factory.minTime = delta
         elif delta > self.factory.maxTime:
             self.factory.maxTime = delta
         self.factory.avgTime += delta
-        self.factory.startTime = time
+        self.factory.startTime = currTime
 
         if self.factory.packetsReceived[currIndex] == False:
             # only keep first copy of each packet, since they might arrive on more than one links
