@@ -105,6 +105,7 @@ class MyReceiverProtocol(LineReceiver):
 
 
     def _processData(self, rawData):
+        print 'NEXT %d' % self.factory.nextToWrite 
         logging.info('Received %d bytes.' % (len(rawData) - 4))
         # split : header + data
         currIndex = int(rawData[0:4])
@@ -137,6 +138,7 @@ class MyReceiverProtocol(LineReceiver):
                         self.factory.window[slotIndex] = rawData[4:]
                         print 'PUSH %d' % currIndex
                         self.factory.slotBusy[slotIndex] = currIndex
+                        break
 
             if self.factory.nextToWrite == self.factory.nrPackets:
                 # file was completely written 
