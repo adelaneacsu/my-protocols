@@ -128,7 +128,7 @@ class MyReceiverProtocol(LineReceiver):
         currTime = time.time()
         print 'Time is %.3f' % currTime
         delta = currTime - self.factory.startTime
-        if delta < self.factory.factory.minTime:
+        if delta < self.factory.minTime:
             self.factory.minTime = delta
         elif delta > self.factory.maxTime:
             self.factory.maxTime = delta
