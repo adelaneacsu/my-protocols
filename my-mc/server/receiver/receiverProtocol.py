@@ -108,7 +108,9 @@ class MyReceiverProtocol(LineReceiver):
         logging.info('Received %d bytes.' % (len(rawData) - 4))
         # split : header + data
         currIndex = int(rawData[0:4])
+        print currIndex
         if self.factory.packetsReceived[currIndex] == False:
+            print 'KEEP'
             # only keep first copy of each packet, since they might arrive on more than one links
             self.factory.packetsReceived[currIndex] = True
             if self.factory.nextToWrite == currIndex:
