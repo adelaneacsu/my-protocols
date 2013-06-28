@@ -142,6 +142,7 @@ class MySenderProtocol(LineReceiver):
             self.directPeers.append(peer)
 
     def _getNextPacket(self, groupNumber):
+        print 'offset = %d' % self.offset[groupNumber]
         chunk = ''
         if self.fileSize > self.offset[groupNumber]:
             currOffset = self.fileObj.tell()
@@ -150,8 +151,10 @@ class MySenderProtocol(LineReceiver):
             packetNr = self.offset[groupNumber] / self.packetSize
             chunk = '0000' + str(packetNr).zfill(4) + self.fileObj.read(self.packetSize)
             self.offset[groupNumber] += self.packetSize
+            print 'pack'
             return chunk
         else:
+            print '-1'
             return -1
 
 
