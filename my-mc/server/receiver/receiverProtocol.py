@@ -1,5 +1,6 @@
 import logging
 import struct
+import time
 
 from twisted.protocols.basic import LineReceiver
 from twisted.internet.protocol import ServerFactory
@@ -12,7 +13,7 @@ from multiEchoFactory import *
 class MyReceiverProtocol(LineReceiver):
 
     def __init__(self, factory):
-        self.factory = factory
+        self.factory    = factory
         self.MAX_LENGTH = 524288010
 
     def connectionMade(self):
@@ -39,13 +40,21 @@ class MyReceiverProtocol(LineReceiver):
             print 'rc = %s %s' % (line ,self.transport.getPeer().host)
             data = line.strip().split(' ')
             if data[0] == 'SCHM':
+                # SCHM number of schema (0, 1, 2 or 3)
                 try:
                     self.factory.nrConnections = int(data[1]) + 1
                 except IndexError:
                     self.sendLine('ERRR')
                     return
+                # start statistics
+                self.startTime  = time.time()
+                self.minTime    = 1000000
+                self.maxTime    = 0
+                self.avgTime    = 0
+                self.nrPacksRec = 0
 
             elif data[0] == 'SIBL' or data[0] == 'CHLD':
+                # SIBL/CHLD IP port
                 try:
                     IP = data[1]
                     port = int(data[2])
@@ -56,6 +65,7 @@ class MyReceiverProtocol(LineReceiver):
                     return
 
             elif data[0] == 'FPTH':
+                # FPTH filepath
                 try:
                     self.factory.fileObj = open(data[1], 'wb')
                     self.factory.nextToWrite = 0
@@ -68,6 +78,7 @@ class MyReceiverProtocol(LineReceiver):
                         echoer.sendLine(line)
             
             elif data[0] == 'PACK':
+                # PACK nrPacks sizePack
                 try:
                     self.factory.nrPackets = int(data[1])
                     self.factory.packetSize = int(data[2])
@@ -80,6 +91,7 @@ class MyReceiverProtocol(LineReceiver):
                         echoer.sendLine(line)
 
             elif data[0] == 'WDSZ':
+                # WDSZ windSz
                 try:
                     self.factory.windowSize = int(data[1])
                     self.factory.window = [""] * self.factory.windowSize
@@ -94,6 +106,7 @@ class MyReceiverProtocol(LineReceiver):
                 self.factory.source.sendLine('SEND')
 
             elif data[0] == 'REQC':
+                # REQC -- check of all packets arrived
                 allSent = True
                 for bitIndex in range(len(self.factory.packetsReceived)):
                     if not self.factory.packetsReceived[bitIndex]:
@@ -109,6 +122,17 @@ class MyReceiverProtocol(LineReceiver):
         # split : header + data
         currIndex = int(rawData[0:4])
         print 'PACK %d' % currIndex
+        # statistics
+        self.nrPacksRec += 1
+        time = time.time()
+        delta = time - self.startTime
+        if delta < self.minTime:
+            self.minTime = delta
+        elif delta > self.maxTime:
+            self.maxTime = delta
+        self.avgTime += delta
+        self.startTime = time
+
         if self.factory.packetsReceived[currIndex] == False:
             # only keep first copy of each packet, since they might arrive on more than one links
             self.factory.packetsReceived[currIndex] = True
@@ -142,7 +166,13 @@ class MyReceiverProtocol(LineReceiver):
                 self.factory.fileObj.close()
                 if len(self.factory.echoFactory.echoers) == 0:
                     self.sendLine('CHRA')
-
+                # print stats
+                print '==================================================================='
+                print 'MIN = %.3f seconds' % self.minTime
+                print 'MAX = %.3f seconds' % self.maxTime
+                print 'AVG = %.3f seconds' % (self.avgTime/self.nrPacksRec)
+                print 'RECEIVED %d packets in %d seconds' % (self.nrPacksRec, self.avgTime)
+                print '==================================================================='
 
     def _newConnection(self, deffered):
         if len(self.factory.echoFactory.echoers) == self.factory.nrConnections:
