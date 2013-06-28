@@ -121,11 +121,10 @@ class MySenderProtocol(LineReceiver):
                     for k in range(0, self.schemaIndices[i]):
                         lc = TCP4ClientEndpoint(reactor, self.destinations[start][0], self.destinations[start][1])
                         rc = TCP4ClientEndpoint(reactor, self.destinations[start+1][0], self.destinations[start+1][1])
-                        lc.connect(MyFileSenderFactory(self, self.destinations[start+1], self.destinations[start+2:start+2+i], group))
-                        rc.connect(MyFileSenderFactory(self, self.destinations[start], self.destinations[start+2:start+2+i], group))
+                        lc.connect(MyFileSenderFactory(self, self.destinations[start+1], self.destinations[start+2:start+2+i], group, 0))
+                        rc.connect(MyFileSenderFactory(self, self.destinations[start], self.destinations[start+2:start+2+i], group, 1))
                         start += (2 + i)       
                         group += 1
-                self.offset = [0] * group
                 self.configs = [0] * group
 
     def _incFileDone(self, peer):
@@ -141,28 +140,19 @@ class MySenderProtocol(LineReceiver):
         else:
             self.directPeers.append(peer)
 
-    def _getNextPacket(self, groupNumber):
-        print 'offset = %d' % self.offset[groupNumber]
+    def _getPacketById(self, packetId):
+        offset = packetId * self.packetSize
+        print 'offset = %d' % offset
         chunk = ''
-        if self.fileSize > self.offset[groupNumber]:
+        if self.fileSize > offset:
+            # there is still data to read from file
             currOffset = self.fileObj.tell()
-            if currOffset != self.offset[groupNumber]:
-                self.fileObj.seek(self.offset[groupNumber])
-            packetNr = self.offset[groupNumber] / self.packetSize
-            chunk = '0000' + str(packetNr).zfill(4) + self.fileObj.read(self.packetSize)
-            self.offset[groupNumber] += self.packetSize
-            print 'pack'
+            if currOffset != offset:
+                self.fileObj.seek(offset)
+            chunk = '0000' + str(packetId).zfill(4) + self.fileObj.read(self.packetSize)
             return chunk
         else:
-            print '-1'
             return -1
-
-
-    def _getPacketById(self, packetId):
-        chunk = ''
-        self.fileObj.seek(self.packetSize * packetId)
-        chunk = '0000' + str(packetId).zfill(4) + self.fileObj.read(self.packetSize)
-        return chunk
 
     def _getConfigurations(self, groupNumber):
         if self.configs[groupNumber] == 0:

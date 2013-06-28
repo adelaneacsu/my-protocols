@@ -37,19 +37,12 @@ class MyFileSenderProtocol(LineReceiver):
 
         elif data[0] == 'SEND':
             # server received configurations, now is asking for data
-            packet = self.factory.parent._getNextPacket(self.factory.groupNr)
+            packet = self.factory.parent._getPacketById(self.parity)
+            k = 1
             while packet != -1:
                 self.sendLine(packet)
-                packet = self.factory.parent._getNextPacket(self.factory.groupNr)
+                packet = self.factory.parent._getPacketById(self.parity + k * 2)
             self.sendLine('REQC')
-            '''
-            if packet == -1:
-                # if there are no more packets to send, get a confirmation request
-                self.sendLine('REQC')
-            else:
-                self.sendLine(packet)
-                self.lineReceived('SEND')
-                '''
 
         elif data[0] == 'NREC':
             # at least one packet did not arrive to the destination, resend it        
