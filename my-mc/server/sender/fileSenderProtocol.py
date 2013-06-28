@@ -59,5 +59,5 @@ class MyFileSenderProtocol(LineReceiver):
             
         elif data[0] == 'RECA':
             # all file was received
-            print '%s %d' % (line ,self.transport.getPeer().host)
+            print '%s %s' % (line ,self.transport.getPeer().host)
             self.factory.parent._incFileDone(self)
