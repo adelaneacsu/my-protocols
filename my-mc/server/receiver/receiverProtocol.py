@@ -47,11 +47,11 @@ class MyReceiverProtocol(LineReceiver):
                     self.sendLine('ERRR')
                     return
                 # start statistics
-                self.startTime  = time.time()
-                self.minTime    = 1000000
-                self.maxTime    = 0
-                self.avgTime    = 0
-                self.nrPacksRec = 0
+                self.factory.startTime  = time.time()
+                self.factory.minTime    = 1000000
+                self.factory.maxTime    = 0
+                self.factory.avgTime    = 0
+                self.factory.nrPacksRec = 0
 
             elif data[0] == 'SIBL' or data[0] == 'CHLD':
                 # SIBL/CHLD IP port
@@ -123,15 +123,15 @@ class MyReceiverProtocol(LineReceiver):
         currIndex = int(rawData[0:4])
         print 'PACK %d' % currIndex
         # statistics
-        self.nrPacksRec += 1
+        self.factory.nrPacksRec += 1
         time = time.time()
-        delta = time - self.startTime
-        if delta < self.minTime:
-            self.minTime = delta
-        elif delta > self.maxTime:
-            self.maxTime = delta
-        self.avgTime += delta
-        self.startTime = time
+        delta = time - self.factory.startTime
+        if delta < self.factory.factory.minTime:
+            self.factory.minTime = delta
+        elif delta > self.factory.maxTime:
+            self.factory.maxTime = delta
+        self.factory.avgTime += delta
+        self.factory.startTime = time
 
         if self.factory.packetsReceived[currIndex] == False:
             # only keep first copy of each packet, since they might arrive on more than one links
@@ -168,10 +168,10 @@ class MyReceiverProtocol(LineReceiver):
                     self.sendLine('CHRA')
                 # print stats
                 print '==================================================================='
-                print 'MIN = %.3f seconds' % self.minTime
-                print 'MAX = %.3f seconds' % self.maxTime
-                print 'AVG = %.3f seconds' % (self.avgTime/self.nrPacksRec)
-                print 'RECEIVED %d packets in %d seconds' % (self.nrPacksRec, self.avgTime)
+                print 'MIN = %.3f seconds' % self.factory.minTime
+                print 'MAX = %.3f seconds' % self.factory.maxTime
+                print 'AVG = %.3f seconds' % (self.factory.avgTime/self.factory.nrPacksRec)
+                print 'RECEIVED %d packets in %d seconds' % (self.factory.nrPacksRec, self.factory.avgTime)
                 print '==================================================================='
 
     def _newConnection(self, deffered):
