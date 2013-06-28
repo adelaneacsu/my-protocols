@@ -125,7 +125,7 @@ class MyReceiverProtocol(LineReceiver):
                         countdown -= 1
                         if self.factory.slotBusy[slotIndex] == self.factory.nextToWrite:
                             self.factory.fileObj.write(self.factory.window[slotIndex])
-                            print 'WRITE %d' % slotIndex
+                            print 'WRITE %d' % self.factory.slotBusy[slotIndex]
                             self.factory.slotBusy[slotIndex] = -1
                             self.factory.nextToWrite += 1
                             countdown = self.factory.windowSize
