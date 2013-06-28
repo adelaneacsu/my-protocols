@@ -108,7 +108,6 @@ class MyReceiverProtocol(LineReceiver):
         logging.info('Received %d bytes.' % (len(rawData) - 4))
         # split : header + data
         currIndex = int(rawData[0:4])
-        print self.factory.window
         print self.factory.slotBusy
         if self.factory.packetsReceived[currIndex] == False:
             # only keep first copy of each packet, since they might arrive on more than one links
@@ -134,6 +133,7 @@ class MyReceiverProtocol(LineReceiver):
                             done = True
             else:
                 # find an empty slot to store data
+                print 'EMPTY ?'
                 for slotIndex in range(self.factory.windowSize):
                     if self.factory.slotBusy[slotIndex] == -1:
                         self.factory.window[slotIndex] = rawData[4:]
