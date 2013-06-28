@@ -17,7 +17,7 @@ class MyReceiverProtocol(LineReceiver):
 
     def connectionMade(self):
         if self.factory.source is None:
-            print 'source is %d' % self.transport.getPeer().port
+            #print 'source is %d' % self.transport.getPeer().port
             self.factory.source = self
         logging.info('Connection made: %s' % self.transport.getPeer())
 
@@ -29,7 +29,7 @@ class MyReceiverProtocol(LineReceiver):
         logging.info('Connection lost: %s' % self.transport.getPeer())
 
     def lineReceived(self, line):
-        print 'rc = %s %d' % (line ,self.transport.getPeer().port)
+        #print 'rc = %s %d' % (line ,self.transport.getPeer().port)
         if line[0:4] == '0000':
             # this is a packet - store and forward
             if self.factory.source == self:

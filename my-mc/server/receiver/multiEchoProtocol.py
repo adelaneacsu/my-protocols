@@ -13,7 +13,7 @@ class MultiEchoProtocol(LineReceiver):
         self.factory.echoers.remove(self)
 
     def lineReceived(self, line):
-        print 'echo = %s %d' % (line ,self.transport.getPeer().port)
+        #print 'echo = %s %d' % (line ,self.transport.getPeer().port)
         data = line.strip().split(' ')
         if data[0] == 'CHRA':
             self.factory.parent.source.sendLine('RECA')
