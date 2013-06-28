@@ -29,7 +29,7 @@ class MyReceiverProtocol(LineReceiver):
         logging.info('Connection lost: %s' % self.transport.getPeer())
 
     def lineReceived(self, line):
-        #print 'rc = %s %d' % (line ,self.transport.getPeer().port)
+        print 'rc = %s %s' % (line ,self.transport.getPeer().host)
         if line[0:4] == '0000':
             # this is a packet - store and forward
             if self.factory.source == self:

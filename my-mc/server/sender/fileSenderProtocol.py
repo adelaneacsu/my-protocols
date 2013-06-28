@@ -22,7 +22,7 @@ class MyFileSenderProtocol(LineReceiver):
         logging.info('Connection lost: %s' % self.transport.getPeer())
 
     def lineReceived(self, line):
-        #print 'fs = %s %d' % (line ,self.transport.getPeer().port)
+        print 'fs = %s %s' % (line ,self.transport.getPeer().host)
         data = line.strip().split(' ')
         if data[0] == 'CONN':
             # get configuration data
