@@ -29,7 +29,6 @@ class MyReceiverProtocol(LineReceiver):
         logging.info('Connection lost: %s' % self.transport.getPeer())
 
     def lineReceived(self, line):
-        print 'rc = %s %s' % (line ,self.transport.getPeer().host)
         if line[0:4] == '0000':
             # this is a packet - store and forward
             if self.factory.source == self:
@@ -37,6 +36,7 @@ class MyReceiverProtocol(LineReceiver):
                     echoer.sendLine(line)
             return self._processData(line[4:])
         else:
+            print 'rc = %s %s' % (line ,self.transport.getPeer().host)
             data = line.strip().split(' ')
             if data[0] == 'SCHM':
                 try:
@@ -108,6 +108,7 @@ class MyReceiverProtocol(LineReceiver):
         logging.info('Received %d bytes.' % (len(rawData) - 4))
         # split : header + data
         currIndex = int(rawData[0:4])
+        print 'PACK %d' % currIndex
         if self.factory.packetsReceived[currIndex] == False:
             # only keep first copy of each packet, since they might arrive on more than one links
             self.factory.packetsReceived[currIndex] = True
