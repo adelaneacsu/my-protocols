@@ -38,10 +38,11 @@ class MyFileSenderProtocol(LineReceiver):
         elif data[0] == 'SEND':
             # server received configurations, now is asking for data
             packet = self.factory.parent._getPacketById(self.factory.parity)
-            k = 1
+            k = 2
             while packet != -1:
                 self.sendLine(packet)
-                packet = self.factory.parent._getPacketById(self.factory.parity + k * 2)
+                packet = self.factory.parent._getPacketById(self.factory.parity + k)
+                k += 2
             self.sendLine('REQC')
 
         elif data[0] == 'NREC':
