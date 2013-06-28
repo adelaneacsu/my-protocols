@@ -108,14 +108,12 @@ class MyReceiverProtocol(LineReceiver):
         logging.info('Received %d bytes.' % (len(rawData) - 4))
         # split : header + data
         currIndex = int(rawData[0:4])
-        print self.factory.slotBusy
         if self.factory.packetsReceived[currIndex] == False:
             # only keep first copy of each packet, since they might arrive on more than one links
             self.factory.packetsReceived[currIndex] = True
             if self.factory.nextToWrite == currIndex:
                 # current packet must be written directly to file
                 self.factory.fileObj.write(rawData[4:])
-                print 'WRITE %d' % currIndex
                 self.factory.nextToWrite += 1
                 countdown = self.factory.windowSize
                 done = False
@@ -125,7 +123,6 @@ class MyReceiverProtocol(LineReceiver):
                         countdown -= 1
                         if self.factory.slotBusy[slotIndex] == self.factory.nextToWrite:
                             self.factory.fileObj.write(self.factory.window[slotIndex])
-                            print 'WRITE %d' % self.factory.slotBusy[slotIndex]
                             self.factory.slotBusy[slotIndex] = -1
                             self.factory.nextToWrite += 1
                             countdown = self.factory.windowSize
@@ -133,17 +130,14 @@ class MyReceiverProtocol(LineReceiver):
                             done = True
             else:
                 # find an empty slot to store data
-                print 'EMPTY ?'
                 for slotIndex in range(self.factory.windowSize):
                     if self.factory.slotBusy[slotIndex] == -1:
                         self.factory.window[slotIndex] = rawData[4:]
-                        print 'PUSH %d' % currIndex
                         self.factory.slotBusy[slotIndex] = currIndex
                         break
 
             if self.factory.nextToWrite == self.factory.nrPackets:
                 # file was completely written 
-                print 'CLOSE...'
                 self.factory.fileObj.close()
                 if len(self.factory.echoFactory.echoers) == 0:
                     self.sendLine('CHRA')
