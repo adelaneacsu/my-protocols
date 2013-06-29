@@ -142,7 +142,6 @@ class MySenderProtocol(LineReceiver):
 
     def _getPacketById(self, packetId):
         offset = packetId * self.packetSize
-        print 'offset = %d' % offset
         chunk = ''
         if self.fileSize > offset:
             # there is still data to read from file
