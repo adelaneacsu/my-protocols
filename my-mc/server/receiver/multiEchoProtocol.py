@@ -7,6 +7,7 @@ class MultiEchoProtocol(LineReceiver):
         self.factory = factory
 
     def connectionMade(self):
+        self.factory.parent.proto._newConnection()
         self.factory.echoers.append(self)
 
     def connectionLost(self, reason):
@@ -17,5 +18,3 @@ class MultiEchoProtocol(LineReceiver):
         data = line.strip().split(' ')
         if data[0] == 'CHRA':
             self.factory.parent.source.sendLine('RECA')
-        elif data[0] == 'HELO':
-            self.factory.parent.proto._newConnection()

@@ -18,7 +18,6 @@ class MyReceiverProtocol(LineReceiver):
         self.MAX_LENGTH = 524288010
 
     def connectionMade(self):
-        self.sendLine('HELO')
         print 'Connection MADE: %s' % self.transport.getPeer()
         logging.info('Connection made: %s' % self.transport.getPeer())
 
@@ -183,6 +182,7 @@ class MyReceiverProtocol(LineReceiver):
                 print '==================================================================='
 
     def _newConnection(self):
+        print 'len echoers = %d; conn = %d' % (len(self.factory.echoFactory.echoers), self.factory.nrConnections)
         if len(self.factory.echoFactory.echoers) == (self.factory.nrConnections - 1):
             # all children are connected
             self.factory.source.sendLine('CONN')
