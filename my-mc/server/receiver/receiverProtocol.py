@@ -13,7 +13,8 @@ from multiEchoFactory import *
 class MyReceiverProtocol(LineReceiver):
 
     def __init__(self, factory):
-        self.factory    = factory
+        self.factory = factory
+        self.factory.proto = self
         self.MAX_LENGTH = 524288010
 
     def connectionMade(self):
@@ -60,9 +61,6 @@ class MyReceiverProtocol(LineReceiver):
                 except IndexError:
                     self.sendLine('ERRR')
                     return
-
-            elif data[0] == 'HELO':
-                self._newConnection()
 
             elif data[0] == 'FPTH':
                 # set source for secondary destination
