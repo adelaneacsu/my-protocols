@@ -26,7 +26,7 @@ class MySenderProtocol(LineReceiver):
             logging.error('Connection ended unexpectedly. Reason: %s' % reason)
 
     def lineReceived(self, line):
-        #print 'sd = %s %d' % (line ,self.transport.getPeer().port)
+        print 'sd = %s %d' % (line ,self.transport.getPeer().port)
         data = line.strip().split(' ')
         if data[0] == 'SRFI':
             try:

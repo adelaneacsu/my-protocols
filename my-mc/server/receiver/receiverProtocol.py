@@ -17,12 +17,14 @@ class MyReceiverProtocol(LineReceiver):
         self.MAX_LENGTH = 524288010
 
     def connectionMade(self):
+        print 'Connection MADE: %s' % self.transport.getPeer()
         if self.factory.source is None:
             #print 'source is %d' % self.transport.getPeer().port
             self.factory.source = self
         logging.info('Connection made: %s' % self.transport.getPeer())
 
     def connectionLost(self, reason):
+        print 'Connection LOST: %s' % self.transport.getPeer()
         if self.factory.source == self:
             self.factory.source = None
             for echoer in self.factory.echoFactory.echoers:
@@ -122,7 +124,7 @@ class MyReceiverProtocol(LineReceiver):
         logging.info('Received %d bytes.' % (len(rawData) - 4))
         # split : header + data
         currIndex = int(rawData[0:4])
-        print 'PACK %d' % currIndex
+        print 'Received PACK %d from %s' % (currIndex, self.transport.getPeer())
         # statistics
         self.factory.nrPacksRec += 1
         currTime = time.time()

@@ -1,0 +1,7 @@
+Acest folder este structurat astfel:
+1. Cod Sursa 	-- contine codul sursa al aplicatiei arhivat.
+2. Documentatie -- contine documentatia licentei si foile de capat in format pdf.
+3. TP software 	-- contine software-ul necesar pentru rularea aplicatiei.
+4. README 		-- acest fisier.
+
+Instructiuni de instalare si utilizare pot fi gasite in documentatie, in capitolul 8.
