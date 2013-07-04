@@ -183,9 +183,9 @@ class MyReceiverProtocol(LineReceiver):
 
     def _newConnection(self):
         print 'len echoers = %d; conn = %d' % (len(self.factory.echoFactory.echoers), self.factory.nrConnections)
-        if len(self.factory.echoFactory.echoers) == (self.factory.nrConnections - 1):
+        if len(self.factory.echoFactory.echoers) == (self.factory.nrConnections - 2):
             # all children are connected
             self.factory.source.sendLine('CONN')
-        elif len(self.factory.echoFactory.echoers) == self.factory.nrConnections:
+        elif len(self.factory.echoFactory.echoers) == (self.factory.nrConnections - 1):
             # sibling is connected
             self.factory.source.sendLine('SEND')
