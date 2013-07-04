@@ -116,16 +116,16 @@ class MySenderProtocol(LineReceiver):
 
             if index == self.nrDestinations - 1:
                 start = 0
-                group = 0
+                groupNumber = 0
                 for i in range(len(self.schemaIndices)):
                     for k in range(0, self.schemaIndices[i]):
                         lc = TCP4ClientEndpoint(reactor, self.destinations[start][0], self.destinations[start][1])
                         rc = TCP4ClientEndpoint(reactor, self.destinations[start+1][0], self.destinations[start+1][1])
-                        lc.connect(MyFileSenderFactory(self, self.destinations[start+1], self.destinations[start+2:start+2+i], group, 0))
-                        rc.connect(MyFileSenderFactory(self, self.destinations[start], self.destinations[start+2:start+2+i], group, 1))
+                        lc.connect(MyFileSenderFactory(self, self.destinations[start+1], self.destinations[start+2:start+2+i], groupNumber, 0))
+                        rc.connect(MyFileSenderFactory(self, self.destinations[start], self.destinations[start+2:start+2+i], groupNumber, 1))
                         start += (2 + i)       
-                        group += 1
-                self.configs = [0] * group
+                        groupNumber += 1
+                self.configs = [0] * groupNumber
 
     def _incFileDone(self, peer):
         self.fileDoneCnt += 1

@@ -18,9 +18,6 @@ class MyReceiverProtocol(LineReceiver):
 
     def connectionMade(self):
         print 'Connection MADE: %s' % self.transport.getPeer()
-        if self.factory.source is None:
-            #print 'source is %d' % self.transport.getPeer().port
-            self.factory.source = self
         logging.info('Connection made: %s' % self.transport.getPeer())
 
     def connectionLost(self, reason):
@@ -42,6 +39,9 @@ class MyReceiverProtocol(LineReceiver):
             print 'rc = %s %s' % (line ,self.transport.getPeer().host)
             data = line.strip().split(' ')
             if data[0] == 'SCHM':
+                # set source for primary destination
+                if self.factory.source is None:
+                    self.factory.source = self
                 # SCHM number of schema (0, 1, 2 or 3)
                 try:
                     self.factory.nrConnections = int(data[1]) + 1
@@ -61,6 +61,9 @@ class MyReceiverProtocol(LineReceiver):
                     return
 
             elif data[0] == 'FPTH':
+                # set source for secondary destination
+                if self.factory.source is None:
+                    self.factory.source = self
                 # FPTH filepath
                 try:
                     self.factory.fileObj = open(data[1], 'wb')
