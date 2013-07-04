@@ -13,7 +13,6 @@ class MyFileSenderProtocol(LineReceiver):
 
     def connectionMade(self):
         self.sendLine('SCHM ' + str(len(self.factory.children)))
-        self.sendLine('SIBL ' + self.factory.sibling[0] + ' ' + str(self.factory.sibling[1]))
         for child in self.factory.children:
             self.sendLine('CHLD ' + child[0] + ' ' + str(child[1]))
         logging.info('Connection made: %s' % self.transport.getPeer())
@@ -25,15 +24,14 @@ class MyFileSenderProtocol(LineReceiver):
         print 'fs = %s %s' % (line ,self.transport.getPeer().host)
         data = line.strip().split(' ')
         if data[0] == 'CONN':
-            # get configuration data
-            if self.factory.parent._getConfigurations(self.factory.groupNr) == 1:
-                # first connected
-                self.sendLine('FPTH ' + self.factory.parent.dstpath)
-                nrPackets = self.factory.parent.fileSize / self.factory.parent.packetSize
-                if self.factory.parent.fileSize % self.factory.parent.packetSize != 0:
-                    nrPackets += 1
-                self.sendLine('PACK ' + str(nrPackets) + ' ' + str(self.factory.parent.packetSize))
-                self.sendLine('WDSZ ' + str(self.factory.parent.windowSize))
+            # send configurations
+            self.sendLine('FPTH ' + self.factory.parent.dstpath)
+            nrPackets = self.factory.parent.fileSize / self.factory.parent.packetSize
+            if self.factory.parent.fileSize % self.factory.parent.packetSize != 0:
+                nrPackets += 1
+            self.sendLine('PACK ' + str(nrPackets) + ' ' + str(self.factory.parent.packetSize))
+            self.sendLine('WDSZ ' + str(self.factory.parent.windowSize))
+            self.sendLine('SIBL ' + self.factory.sibling[0] + ' ' + str(self.factory.sibling[1]))
 
         elif data[0] == 'SEND':
             # server received configurations, now is asking for data
@@ -53,5 +51,4 @@ class MyFileSenderProtocol(LineReceiver):
             
         elif data[0] == 'RECA':
             # all file was received
-            print '%s %s' % (line ,self.transport.getPeer().host)
             self.factory.parent._incFileDone(self)

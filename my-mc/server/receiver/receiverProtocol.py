@@ -17,6 +17,7 @@ class MyReceiverProtocol(LineReceiver):
         self.MAX_LENGTH = 524288010
 
     def connectionMade(self):
+        self.sendLine('HELO')
         print 'Connection MADE: %s' % self.transport.getPeer()
         logging.info('Connection made: %s' % self.transport.getPeer())
 
@@ -55,10 +56,13 @@ class MyReceiverProtocol(LineReceiver):
                     IP = data[1]
                     port = int(data[2])
                     endpoint = TCP4ClientEndpoint(reactor, IP, port)
-                    endpoint.connect(self.factory.echoFactory).addCallback(self._newConnection)
+                    endpoint.connect(self.factory.echoFactory)
                 except IndexError:
                     self.sendLine('ERRR')
                     return
+
+            elif data[0] == 'HELO':
+                self._newConnection()
 
             elif data[0] == 'FPTH':
                 # set source for secondary destination
@@ -180,7 +184,10 @@ class MyReceiverProtocol(LineReceiver):
                 print 'RECEIVED %d packets in %d seconds' % (self.factory.nrPacksRec, self.factory.avgTime)
                 print '==================================================================='
 
-    def _newConnection(self, deffered):
-        if len(self.factory.echoFactory.echoers) == self.factory.nrConnections:
-            # all nodes are connected
+    def _newConnection(self):
+        if len(self.factory.echoFactory.echoers) == (self.factory.nrConnections - 1):
+            # all children are connected
             self.sendLine('CONN')
+        elif len(self.factory.echoFactory.echoers) == self.factory.nrConnections:
+            # sibling is connected
+            self.sendLine('SEND')
