@@ -110,7 +110,6 @@ class MyReceiverProtocol(LineReceiver):
                 if self.factory.source == self:
                     for echoer in self.factory.echoFactory.echoers:
                         echoer.sendLine(line)
-                self.factory.source.sendLine('SEND')
 
             elif data[0] == 'REQC':
                 # REQC -- check of all packets arrived
