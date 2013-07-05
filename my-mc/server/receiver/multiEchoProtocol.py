@@ -7,6 +7,7 @@ class MultiEchoProtocol(LineReceiver):
         self.factory = factory
 
     def connectionMade(self):
+        print 'Connection in echo ===: %s' % self.transport.getPeer()
         self.factory.parent.proto._newConnection()
         self.factory.echoers.append(self)
 
