@@ -18,11 +18,13 @@ class MyReceiverProtocol(LineReceiver):
         self.MAX_LENGTH = 524288010
 
     def connectionMade(self):
-        print 'Connection MADE: %s' % self.transport.getPeer()
+        if __debug__:
+            print 'Connection MADE: %s' % self.transport.getPeer()
         logging.info('Connection made: %s' % self.transport.getPeer())
 
     def connectionLost(self, reason):
-        print 'Connection LOST: %s' % self.transport.getPeer()
+        if __debug__:
+            print 'Connection LOST: %s' % self.transport.getPeer()
         if self.factory.source == self:
             self.factory.source = None
             for echoer in self.factory.echoFactory.echoers:
@@ -37,7 +39,8 @@ class MyReceiverProtocol(LineReceiver):
                     echoer.sendLine(line)
             return self._processData(line[4:])
         else:
-            print 'rc = %s %s' % (line ,self.transport.getPeer().host)
+            if __debug__:
+                print 'rc = %s %s' % (line ,self.transport.getPeer().host)
             data = line.strip().split(' ')
             if data[0] == 'SCHM':
                 # set source for primary destination
@@ -73,12 +76,13 @@ class MyReceiverProtocol(LineReceiver):
                 except IndexError:
                     self.sendLine('ERRR')
                     return
-                # start statistics
-                self.factory.startTime  = time.time()
-                self.factory.minTime    = 1000000
-                self.factory.maxTime    = 0
-                self.factory.avgTime    = 0
-                self.factory.nrPacksRec = 0
+                if __debug__:
+                    # start statistics
+                    self.factory.startTime  = time.time()
+                    self.factory.minTime    = 1000000
+                    self.factory.maxTime    = 0
+                    self.factory.avgTime    = 0
+                    self.factory.nrPacksRec = 0
                 # forward configurations
                 if self.factory.source == self:
                     for echoer in self.factory.echoFactory.echoers:
@@ -127,17 +131,18 @@ class MyReceiverProtocol(LineReceiver):
         logging.info('Received %d bytes.' % (len(rawData) - 4))
         # split : header + data
         currIndex = int(rawData[0:4])
-        print 'Received PACK %d from %s' % (currIndex, self.transport.getPeer())
-        # statistics
-        self.factory.nrPacksRec += 1
-        currTime = time.time()
-        delta = currTime - self.factory.startTime
-        if delta < self.factory.minTime:
-            self.factory.minTime = delta
-        elif delta > self.factory.maxTime:
-            self.factory.maxTime = delta
-        self.factory.avgTime += delta
-        self.factory.startTime = currTime
+        if __debug__:
+            print 'Received PACK %d from %s' % (currIndex, self.transport.getPeer())
+            # statistics
+            self.factory.nrPacksRec += 1
+            currTime = time.time()
+            delta = currTime - self.factory.startTime
+            if delta < self.factory.minTime:
+                self.factory.minTime = delta
+            elif delta > self.factory.maxTime:
+                self.factory.maxTime = delta
+            self.factory.avgTime += delta
+            self.factory.startTime = currTime
 
         if self.factory.packetsReceived[currIndex] == False:
             # only keep first copy of each packet, since they might arrive on more than one links
@@ -172,16 +177,16 @@ class MyReceiverProtocol(LineReceiver):
                 self.factory.fileObj.close()
                 if len(self.factory.echoFactory.echoers) == 0:
                     self.sendLine('CHRA')
-                # print stats
-                print '==================================================================='
-                print 'MIN = %.3f seconds' % self.factory.minTime
-                print 'MAX = %.3f seconds' % self.factory.maxTime
-                print 'AVG = %.3f seconds' % (self.factory.avgTime/self.factory.nrPacksRec)
-                print 'RECEIVED %d packets in %d seconds' % (self.factory.nrPacksRec, self.factory.avgTime)
-                print '==================================================================='
+                if __debug__:
+                    # print stats
+                    print '==================================================================='
+                    print 'MIN = %.3f seconds' % self.factory.minTime
+                    print 'MAX = %.3f seconds' % self.factory.maxTime
+                    print 'AVG = %.3f seconds' % (self.factory.avgTime/self.factory.nrPacksRec)
+                    print 'RECEIVED %d packets in %d seconds' % (self.factory.nrPacksRec, self.factory.avgTime)
+                    print '==================================================================='
 
     def _newConnection(self):
-        print 'len echoers = %d; conn = %d' % (len(self.factory.echoFactory.echoers), self.factory.nrConnections)
         if len(self.factory.echoFactory.echoers) == (self.factory.nrConnections - 2):
             # all children are connected
             self.factory.source.sendLine('CONN')

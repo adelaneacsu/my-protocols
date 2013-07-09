@@ -19,7 +19,8 @@ class MyClientProtocol(LineReceiver):
 
         
     def lineReceived(self, line):
-        print line
+        if __debug__:
+            print line
         data = line.strip().split(' ')
         if data[0] == 'FISZ':
             # file size
